@@ -1,0 +1,21 @@
+silver:
+  min_rows: 100                  # a daily load should never be tiny
+  max_null_rate:
+    campaign_id: 0.0             # key columns must never be null
+    event_ts: 0.0
+    spend: 0.01                  # tolerate up to 1% null spend
+  allowed_values:
+    event_type: [impression, click, conversion]
+    channel: [Display, Search, Social, Video]
+  unique_key: [event_id]         # no duplicate events
+
+gold:
+  referential:
+    - fact: fct_campaign_daily
+      fact_key: campaign_id
+      dim: dim_campaign
+      dim_key: campaign_id
+    - fact: fct_campaign_daily
+      fact_key: channel_key
+      dim: dim_channel
+      dim_key: channel_key

@@ -1,0 +1,21 @@
+env: local                       # local | databricks
+
+catalog: admetrics
+schemas:
+  bronze: bronze
+  silver: silver
+  gold: gold
+
+paths:
+  # Used when env=local; on Databricks these become catalog.schema.table
+  raw:    ./data/samples
+  bronze: ./data/delta/bronze
+  silver: ./data/delta/silver
+  gold:   ./data/delta/gold
+
+raw_format: csv                  # csv | parquet
+raw_glob: "*.csv"
+
+# Partition + optimization
+partition_col: event_date
+zorder_cols: [campaign_id, event_date]

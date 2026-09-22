@@ -1,0 +1,35 @@
+# Secrets
+.env
+.env.local
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Spark
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Local data (keep samples/)
+data/*
+!data/samples/
+!data/samples/**
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Databricks
+.databricks/

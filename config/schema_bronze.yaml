@@ -1,0 +1,14 @@
+# Expected raw columns from the ad platform export.
+# Edit this block to point at a different source (e.g. Criteo).
+columns:
+  event_id:        string
+  event_ts:        string        # parsed to timestamp in silver
+  event_type:      string        # impression | click | conversion
+  campaign_id:     string
+  campaign_name:   string
+  channel:         string        # Display | Search | Social | Video
+  advertiser_id:   string
+  advertiser_name: string
+  device:          string        # mobile | desktop | tablet
+  spend:           string        # cast to double in silver
+  revenue:         string        # cast to double in silver
