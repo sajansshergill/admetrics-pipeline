@@ -4,6 +4,36 @@ An end-to-end ELT pipeline that turns raw digital-advertising event data into an
 
 The pipeline ingests daily ad-platform exports (impressions, clicks, spend, conversions), cleans and validates them with explicit data-quality gates, and models the results into a star schema that analysts can query for campaign performance — CTR, spend efficiency, conversion rates, and channel-level trends.
 
+![AdMetrics Pipeline demo](docs/demo.gif)
+
+## The console
+
+AdMetrics' serving layer is an interactive performance console (`app/dashboard.py`, Streamlit + Plotly) over the gold campaign fact table:
+
+- **Live sidebar filters** — date range, channels, advertisers, campaigns and a
+  minimum daily-spend threshold; every chart, table and KPI re-renders instantly.
+- **KPI cards with deltas** — filtered spend vs. the prior equal-length period,
+  impressions and clicks, average CTR, conversions, revenue and ROAS.
+- **Animated charts** — Plotly `animation_frame` views you can play: daily spend
+  by campaign, the rolling 7-day CTR race (`rolling_ctr_7d`), and a per-channel
+  spend-rank race (`spend_rank_by_channel`).
+- **3D performance space** — a rotatable `Scatter3d` of every campaign-day in
+  spend × CTR × ROAS space, and a channel × date **spend surface** terrain
+  (drag to orbit, scroll to zoom).
+- **Medallion quality view** — bronze → silver → gold row counts per day, the
+  silver expectation pass rate, duplicate-event rate from the `event_id`
+  dedupe, and null-rate tracking against the thresholds in
+  `config/quality_rules.yaml`.
+- **Dark UI** — gradient hero header, glass KPI cards and a custom dark theme
+  (`.streamlit/config.toml` + inline CSS).
+
+The console runs standalone: `streamlit run app/dashboard.py`. Its demo data is
+deterministic and generated locally from the repo's own schemas
+(`config/schema_bronze.yaml`, `config/quality_rules.yaml`) at the gold grain —
+one row per (event_date, campaign_id, channel) with the same CTR, CVR, ROAS,
+`ctr_7d`, running-spend and `spend_rank_in_channel` metrics the Spark gold
+layer computes — so it works with no Databricks cluster or S3 bucket attached.
+
 ---
 
 ## Why this project
@@ -144,6 +174,12 @@ admetrics-pipeline/
 │   ├── data_dictionary.md          # column-level definitions for gold tables
 │   └── images/
 │       └── architecture.png
+│
+├── app/
+│   └── dashboard.py                # Streamlit + Plotly performance console
+│
+├── .streamlit/
+│   └── config.toml                 # console dark theme
 │
 ├── scripts/
 │   ├── deploy_jobs.sh              # push job JSON to workspace via CLI
